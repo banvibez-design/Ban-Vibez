@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>🛑 Ban Vibez — Community Petition</title>
+  <meta name="theme-color" content="#111827">
+  <style>
+    body { background:#0b1220; color:#e5e7eb; font-family:sans-serif; margin:0; padding:20px; }
+    .card { background:#111827; border-radius:10px; padding:20px; margin-bottom:20px; }
+    img { border-radius:12px; max-width:120px; }
+    button { padding:10px 14px; border-radius:8px; border:none; margin-top:10px; cursor:pointer; }
+    .bad { background:#f43f5e; color:#fff; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🛑 Petition to Ban Vibez™</h1>
+    <img src="vibez.png" alt="Vibez profile">
+    <p>A playful community petition. Maximum drama, minimum paperwork.</p>
+    <a href="https://steamcommunity.com/profiles/76561199260160355" target="_blank">🚂 View Steam Profile</a>
+  </div>
+
+  <div class="card">
+    <h2>Sign the Petition</h2>
+    <form id="sigForm">
+      <input id="name" placeholder="Your name or gamer tag"><br><br>
+      <textarea id="reason" placeholder="Why must Vibez be bonked?"></textarea><br>
+      <button class="bad" type="submit">Add Signature</button>
+    </form>
+    <div id="sigList"><em>No signatures yet.</em></div>
+  </div>
+
+<script>
+  const KEY = "vibez_petition";
+  const list = document.getElementById('sigList');
+  const form = document.getElementById('sigForm');
+  const nameEl = document.getElementById('name');
+  const reasonEl = document.getElementById('reason');
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)||"[]"); }
+    catch(e) { return []; }
+  }
+  function save(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+
+  function render() {
+    const arr = load();
+    list.innerHTML = "";
+    if (!arr.length) { list.innerHTML = "<em>No signatures yet.</em>"; return; }
+    arr.slice().reverse().forEach(s => {
+      const div = document.createElement("div");
+      div.textContent = (s.name||"Anonymous") + ": " + (s.reason||"—");
+      list.appendChild(div);
+    });
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = nameEl.value.trim();
+    const reason = reasonEl.value.trim();
+    if (!name && !reason) { alert("Enter a name or reason!"); return; }
+    const arr = load();
+    arr.push({name, reason, t: Date.now()});
+    save(arr);
+    nameEl.value = ""; reasonEl.value = "";
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
