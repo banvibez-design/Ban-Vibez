@@ -17,53 +17,37 @@
     }
     * { box-sizing: border-box; }
     body {
-      margin: 0; padding: 0;
-      background: var(--bg);
-      color: var(--text);
+      margin:0; padding:0;
+      background:var(--bg);
+      color:var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      overflow-x:hidden;
     }
-    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-    .card {
-      background: #111827;
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    #fireworks {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: var(--bg);
     }
-    header.hero { display: grid; grid-template-columns: 88px 1fr; gap: 16px; align-items: center; }
-    .pfp img { width: 88px; height: 88px; border-radius: 18px; object-fit: cover; }
-    h1 { margin: 0; font-size: clamp(22px, 4vw, 34px); }
-    .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
-    .btn {
-      display: inline-block;
-      margin: 5px 5px 0 0;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px; position: relative; z-index: 1; }
+    .card { background:#111827cc; border-radius:20px; padding:18px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.35); }
+    header.hero { display:grid; grid-template-columns:88px 1fr; gap:16px; align-items:center; }
+    .pfp img { width:88px; height:88px; border-radius:18px; object-fit:cover; }
+    h1 { margin:0; font-size:clamp(22px, 4vw, 34px); }
+    .sub { color:var(--muted); font-size:14px; margin-top:6px; }
+    .btn { display:inline-block; margin:5px 5px 0 0; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:var(--text); font-weight:600; cursor:pointer; }
     .btn.bad { border-color: rgba(244,63,94,0.6); }
     .btn.good { border-color: rgba(52,211,153,0.6); }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: #0c1426;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
-    textarea { min-height: 80px; resize: vertical; }
-    .sig { border-bottom: 1px dashed rgba(255,255,255,0.1); padding: 8px 0; }
-    .sig small { color: var(--muted); }
-    .empty { color: var(--muted); text-align: center; padding: 14px; }
-    footer { text-align: center; color: var(--muted); font-size: 13px; margin: 26px 0 8px; }
+    input, textarea { width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:#0c1426; color:var(--text); margin-bottom:10px; }
+    textarea { min-height:80px; resize:vertical; }
+    .sig { border-bottom:1px dashed rgba(255,255,255,0.1); padding:8px 0; }
+    .sig small { color:var(--muted); }
+    .empty { color:var(--muted); text-align:center; padding:14px; }
+    footer { text-align:center; color:var(--muted); font-size:13px; margin:26px 0 8px; }
   </style>
 </head>
 <body>
+  <canvas id="fireworks"></canvas>
   <div class="container">
     <div class="card">
       <header class="hero">
@@ -71,9 +55,8 @@
         <div>
           <h1>🛑 Petition to (Playfully) Ban Vibez™</h1>
           <div class="sub">A tongue-in-cheek citizen initiative by the community.</div>
-          <a class="btn" href="https://steamcommunity.com/profiles/76561199260160355" target="_blank">🚂 View Steam Profile</a>
+          <a class="btn" href="https://steamcommunity.com/profiles/76561199260160355" target="_blank" rel="noopener">🚂 View Steam Profile</a>
           <button class="btn good" id="shareBtn">📤 Share</button>
-          <button class="btn" id="exportBtn">🧾 Export Signatures</button>
         </div>
       </header>
     </div>
@@ -81,10 +64,11 @@
     <div class="card">
       <h2>📜 The Charges</h2>
       <ul>
-        <li>Deploying the Ban Hammer with unnecessary flourish.</li>
-        <li>Excessive GIF reactions per minute.</li>
-        <li>Suspiciously high headshot ratio on rainy Tuesdays.</li>
-        <li>Calling “just one more round” at 2am… every time.</li>
+        <li>Being a nerd.</li>
+        <li>Deploying the Ban Hammer with veracious justice.</li>
+        <li>Leaving POG to fend for himself that one time in Arma.</li>
+        <li>Not winning that one 1v1 against Boba Fett.</li>
+        <li>Speaking in ALL CAPS on comms for dramatic effect.</li>
       </ul>
     </div>
 
@@ -115,13 +99,9 @@
   const form = document.getElementById('sigForm');
   const nameEl = document.getElementById('name');
   const reasonEl = document.getElementById('reason');
-  const exportBtn = document.getElementById('exportBtn');
   const shareBtn = document.getElementById('shareBtn');
 
-  function load() {
-    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
-    catch { return []; }
-  }
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } }
   function save(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
 
   function render() {
@@ -151,22 +131,8 @@
     render();
   });
 
-  exportBtn.addEventListener('click', () => {
-    const data = JSON.stringify(load(), null, 2);
-    const blob = new Blob([data], {type: "application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = "ban-vibez-signatures.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
   shareBtn.addEventListener('click', async () => {
-    const shareData = {
-      title: "Ban Vibez Petition",
-      text: "Sign the petition to (playfully) ban Vibez.",
-      url: window.location.href
-    };
+    const shareData = { title: "Ban Vibez Petition", text: "Sign the petition to (playfully) ban Vibez.", url: window.location.href };
     try {
       if (navigator.share) await navigator.share(shareData);
       else {
@@ -177,6 +143,37 @@
   });
 
   render();
+
+  // Fireworks animation
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+  addEventListener('resize', resize); resize();
+
+  function random(min, max) { return Math.random() * (max - min) + min; }
+  class Particle {
+    constructor(x,y,color,velX,velY,life) { this.x=x; this.y=y; this.color=color; this.velX=velX; this.velY=velY; this.life=life; }
+    update() { this.x += this.velX; this.y += this.velY; this.velY += 0.02; this.life -= 1; }
+    draw() { ctx.fillStyle=this.color; ctx.fillRect(this.x,this.y,2,2); }
+  }
+  function explode(x,y) {
+    const colors = ["#ff4d6d","#ffd166","#06d6a0","#118ab2","#c77dff"];
+    for(let i=0;i<100;i++) {
+      let angle = Math.random()*2*Math.PI;
+      let speed = random(1,4);
+      particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)],Math.cos(angle)*speed,Math.sin(angle)*speed,100));
+    }
+  }
+  canvas.addEventListener('click',(e)=>explode(e.clientX,e.clientY));
+  setInterval(()=>explode(random(0,canvas.width), random(0,canvas.height/2)), 2000);
+  function animate() {
+    ctx.fillStyle="rgba(11,18,32,0.2)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p,i)=>{ p.update(); p.draw(); if(p.life<=0) particles.splice(i,1); });
+    requestAnimationFrame(animate);
+  }
+  animate();
 </script>
 </body>
 </html>
