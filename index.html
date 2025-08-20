@@ -6,65 +6,174 @@
   <title>🛑 Ban Vibez — Community Petition</title>
   <meta name="theme-color" content="#111827">
   <style>
-    body { background:#0b1220; color:#e5e7eb; font-family:sans-serif; margin:0; padding:20px; }
-    .card { background:#111827; border-radius:10px; padding:20px; margin-bottom:20px; }
-    img { border-radius:12px; max-width:120px; }
-    button { padding:10px 14px; border-radius:8px; border:none; margin-top:10px; cursor:pointer; }
-    .bad { background:#f43f5e; color:#fff; }
+    :root {
+      --bg: #0b1220;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22d3ee;
+      --good: #34d399;
+      --bad: #f43f5e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+    .card {
+      background: #111827;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    header.hero { display: grid; grid-template-columns: 88px 1fr; gap: 16px; align-items: center; }
+    .pfp img { width: 88px; height: 88px; border-radius: 18px; object-fit: cover; }
+    h1 { margin: 0; font-size: clamp(22px, 4vw, 34px); }
+    .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+    .btn {
+      display: inline-block;
+      margin: 5px 5px 0 0;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn.bad { border-color: rgba(244,63,94,0.6); }
+    .btn.good { border-color: rgba(52,211,153,0.6); }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: #0c1426;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    .sig { border-bottom: 1px dashed rgba(255,255,255,0.1); padding: 8px 0; }
+    .sig small { color: var(--muted); }
+    .empty { color: var(--muted); text-align: center; padding: 14px; }
+    footer { text-align: center; color: var(--muted); font-size: 13px; margin: 26px 0 8px; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🛑 Petition to Ban Vibez™</h1>
-    <img src="vibez.png" alt="Vibez profile">
-    <p>A playful community petition. Maximum drama, minimum paperwork.</p>
-    <a href="https://steamcommunity.com/profiles/76561199260160355" target="_blank">🚂 View Steam Profile</a>
-  </div>
+  <div class="container">
+    <div class="card">
+      <header class="hero">
+        <div class="pfp"><img src="vibez.png" alt="Vibez profile"></div>
+        <div>
+          <h1>🛑 Petition to (Playfully) Ban Vibez™</h1>
+          <div class="sub">A tongue-in-cheek citizen initiative by the community.</div>
+          <a class="btn" href="https://steamcommunity.com/profiles/76561199260160355" target="_blank">🚂 View Steam Profile</a>
+          <button class="btn good" id="shareBtn">📤 Share</button>
+          <button class="btn" id="exportBtn">🧾 Export Signatures</button>
+        </div>
+      </header>
+    </div>
 
-  <div class="card">
-    <h2>Sign the Petition</h2>
-    <form id="sigForm">
-      <input id="name" placeholder="Your name or gamer tag"><br><br>
-      <textarea id="reason" placeholder="Why must Vibez be bonked?"></textarea><br>
-      <button class="bad" type="submit">Add Signature</button>
-    </form>
-    <div id="sigList"><em>No signatures yet.</em></div>
+    <div class="card">
+      <h2>📜 The Charges</h2>
+      <ul>
+        <li>Deploying the Ban Hammer with unnecessary flourish.</li>
+        <li>Excessive GIF reactions per minute.</li>
+        <li>Suspiciously high headshot ratio on rainy Tuesdays.</li>
+        <li>Calling “just one more round” at 2am… every time.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>✍️ Sign the Petition</h2>
+      <form id="sigForm">
+        <input id="name" placeholder="Your name or gamer tag (optional)">
+        <textarea id="reason" placeholder="Why must Vibez be bonked? Keep it fun."></textarea>
+        <button class="btn bad" type="submit">Add Signature</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>🖊️ Signatures</h2>
+      <div id="sigList" class="list">
+        <div class="empty">No signatures yet — be the first!</div>
+      </div>
+    </div>
+
+    <footer>
+      Built with ❤️ by the community. This page runs fully in your browser.
+    </footer>
   </div>
 
 <script>
   const KEY = "vibez_petition";
-  const list = document.getElementById('sigList');
+  const sigList = document.getElementById('sigList');
   const form = document.getElementById('sigForm');
   const nameEl = document.getElementById('name');
   const reasonEl = document.getElementById('reason');
+  const exportBtn = document.getElementById('exportBtn');
+  const shareBtn = document.getElementById('shareBtn');
 
   function load() {
-    try { return JSON.parse(localStorage.getItem(KEY)||"[]"); }
-    catch(e) { return []; }
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch { return []; }
   }
   function save(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
 
   function render() {
     const arr = load();
-    list.innerHTML = "";
-    if (!arr.length) { list.innerHTML = "<em>No signatures yet.</em>"; return; }
+    sigList.innerHTML = "";
+    if (!arr.length) {
+      sigList.innerHTML = '<div class="empty">No signatures yet — be the first!</div>';
+      return;
+    }
     arr.slice().reverse().forEach(s => {
-      const div = document.createElement("div");
-      div.textContent = (s.name||"Anonymous") + ": " + (s.reason||"—");
-      list.appendChild(div);
+      const row = document.createElement('div');
+      row.className = "sig";
+      row.innerHTML = `<strong>${s.name || "Anonymous"}</strong>: ${s.reason || "—"}<br><small>${new Date(s.t).toLocaleString()}</small>`;
+      sigList.appendChild(row);
     });
   }
 
-  form.addEventListener("submit", e => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
     const name = nameEl.value.trim();
     const reason = reasonEl.value.trim();
-    if (!name && !reason) { alert("Enter a name or reason!"); return; }
+    if (!name && !reason) { alert("Add at least a name or a reason!"); return; }
     const arr = load();
-    arr.push({name, reason, t: Date.now()});
+    arr.push({ name, reason, t: Date.now() });
     save(arr);
     nameEl.value = ""; reasonEl.value = "";
     render();
+  });
+
+  exportBtn.addEventListener('click', () => {
+    const data = JSON.stringify(load(), null, 2);
+    const blob = new Blob([data], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = "ban-vibez-signatures.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  shareBtn.addEventListener('click', async () => {
+    const shareData = {
+      title: "Ban Vibez Petition",
+      text: "Sign the petition to (playfully) ban Vibez.",
+      url: window.location.href
+    };
+    try {
+      if (navigator.share) await navigator.share(shareData);
+      else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied!");
+      }
+    } catch(e) { console.log(e); }
   });
 
   render();
