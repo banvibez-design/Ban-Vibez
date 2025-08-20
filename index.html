@@ -6,44 +6,24 @@
   <title>🛑 Ban Vibez — Community Petition</title>
   <meta name="theme-color" content="#111827">
   <style>
-    :root {
-      --bg: #0b1220;
-      --card: #111827;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #22d3ee;
-      --good: #34d399;
-      --bad: #f43f5e;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin:0; padding:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      overflow-x:hidden;
-    }
-    #fireworks {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: var(--bg);
-    }
-    .container { max-width: 900px; margin: 0 auto; padding: 24px; position: relative; z-index: 1; }
-    .card { background:#111827cc; border-radius:20px; padding:18px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.35); }
-    header.hero { display:grid; grid-template-columns:88px 1fr; gap:16px; align-items:center; }
-    .pfp img { width:88px; height:88px; border-radius:18px; object-fit:cover; }
-    h1 { margin:0; font-size:clamp(22px, 4vw, 34px); }
-    .sub { color:var(--muted); font-size:14px; margin-top:6px; }
-    .btn { display:inline-block; margin:5px 5px 0 0; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); color:var(--text); font-weight:600; cursor:pointer; }
-    .btn.bad { border-color: rgba(244,63,94,0.6); }
-    .btn.good { border-color: rgba(52,211,153,0.6); }
-    input, textarea { width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:#0c1426; color:var(--text); margin-bottom:10px; }
-    textarea { min-height:80px; resize:vertical; }
-    .sig { border-bottom:1px dashed rgba(255,255,255,0.1); padding:8px 0; }
-    .sig small { color:var(--muted); }
-    .empty { color:var(--muted); text-align:center; padding:14px; }
-    footer { text-align:center; color:var(--muted); font-size:13px; margin:26px 0 8px; }
+    :root { --bg:#0b1220; --text:#e5e7eb; --muted:#9ca3af; }
+    *{box-sizing:border-box}
+    body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;overflow-x:hidden}
+    #fireworks{position:fixed;inset:0;z-index:-1;background:var(--bg)}
+    .container{max-width:900px;margin:0 auto;padding:24px;position:relative;z-index:1}
+    .card{background:#111827cc;border-radius:20px;padding:18px;margin-bottom:20px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    header.hero{display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:center}
+    .pfp img{width:88px;height:88px;border-radius:18px;object-fit:cover}
+    h1{margin:0;font-size:clamp(22px,4vw,34px)}
+    .sub{color:var(--muted);font-size:14px;margin-top:6px}
+    .btn{display:inline-block;margin:5px 5px 0 0;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text);font-weight:600;cursor:pointer}
+    .btn.bad{border-color:rgba(244,63,94,.6)} .btn.good{border-color:rgba(52,211,153,.6)}
+    input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0c1426;color:var(--text);margin-bottom:10px}
+    textarea{min-height:80px;resize:vertical}
+    .sig{border-bottom:1px dashed rgba(255,255,255,.1);padding:8px 0}
+    .sig small{color:var(--muted)}
+    .empty{color:var(--muted);text-align:center;padding:14px}
+    footer{text-align:center;color:var(--muted);font-size:13px;margin:26px 0 8px}
   </style>
 </head>
 <body>
@@ -51,11 +31,11 @@
   <div class="container">
     <div class="card">
       <header class="hero">
-        <div class="pfp"><img src="vibez.png" alt="Vibez profile"></div>
+        <div class="pfp"><img src="banhammer.png" alt="Vibez profile"></div>
         <div>
           <h1>🛑 Petition to (Playfully) Ban Vibez™</h1>
           <div class="sub">A tongue-in-cheek citizen initiative by the community.</div>
-          <a class="btn" href="https://steamcommunity.com/profiles/76561199260160355" target="_blank" rel="noopener">🚂 View Steam Profile</a>
+          <a class="btn" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">🚂 View Steam Profile</a>
           <button class="btn good" id="shareBtn">📤 Share</button>
         </div>
       </header>
@@ -88,92 +68,27 @@
       </div>
     </div>
 
-    <footer>
-      Built with ❤️ by the community. This page runs fully in your browser.
-    </footer>
+    <footer>Built with ❤️ by the community. This page runs fully in your browser.</footer>
   </div>
 
 <script>
-  const KEY = "vibez_petition";
-  const sigList = document.getElementById('sigList');
-  const form = document.getElementById('sigForm');
-  const nameEl = document.getElementById('name');
-  const reasonEl = document.getElementById('reason');
-  const shareBtn = document.getElementById('shareBtn');
-
-  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } }
-  function save(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
-
-  function render() {
-    const arr = load();
-    sigList.innerHTML = "";
-    if (!arr.length) {
-      sigList.innerHTML = '<div class="empty">No signatures yet — be the first!</div>';
-      return;
-    }
-    arr.slice().reverse().forEach(s => {
-      const row = document.createElement('div');
-      row.className = "sig";
-      row.innerHTML = `<strong>${s.name || "Anonymous"}</strong>: ${s.reason || "—"}<br><small>${new Date(s.t).toLocaleString()}</small>`;
-      sigList.appendChild(row);
-    });
-  }
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = nameEl.value.trim();
-    const reason = reasonEl.value.trim();
-    if (!name && !reason) { alert("Add at least a name or a reason!"); return; }
-    const arr = load();
-    arr.push({ name, reason, t: Date.now() });
-    save(arr);
-    nameEl.value = ""; reasonEl.value = "";
-    render();
-  });
-
-  shareBtn.addEventListener('click', async () => {
-    const shareData = { title: "Ban Vibez Petition", text: "Sign the petition to (playfully) ban Vibez.", url: window.location.href };
-    try {
-      if (navigator.share) await navigator.share(shareData);
-      else {
-        await navigator.clipboard.writeText(window.location.href);
-        alert("Link copied!");
-      }
-    } catch(e) { console.log(e); }
-  });
-
+  const KEY="vibez_petition";const sigList=document.getElementById('sigList');const form=document.getElementById('sigForm');const nameEl=document.getElementById('name');const reasonEl=document.getElementById('reason');const shareBtn=document.getElementById('shareBtn');
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function render(){const a=load();sigList.innerHTML="";if(!a.length){sigList.innerHTML='<div class="empty">No signatures yet — be the first!</div>';return}a.slice().reverse().forEach(s=>{const r=document.createElement('div');r.className="sig";r.innerHTML=`<strong>${s.name||"Anonymous"}</strong>: ${s.reason||"—"}<br><small>${new Date(s.t).toLocaleString()}</small>`;sigList.appendChild(r)})}
+  form.addEventListener('submit',e=>{e.preventDefault();const n=nameEl.value.trim(),r=reasonEl.value.trim();if(!n&&!r){alert("Add at least a name or a reason!");return}const a=load();a.push({name:n,reason:r,t:Date.now()});save(a);nameEl.value="";reasonEl.value="";render()});
+  shareBtn.addEventListener('click',async()=>{const d={title:"Ban Vibez Petition",text:"Sign the petition to (playfully) ban Vibez.",url:location.href};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(location.href);alert("Link copied!")}}catch(e){console.log(e)}});
   render();
 
-  // Fireworks animation
-  const canvas = document.getElementById('fireworks');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
-  addEventListener('resize', resize); resize();
-
-  function random(min, max) { return Math.random() * (max - min) + min; }
-  class Particle {
-    constructor(x,y,color,velX,velY,life) { this.x=x; this.y=y; this.color=color; this.velX=velX; this.velY=velY; this.life=life; }
-    update() { this.x += this.velX; this.y += this.velY; this.velY += 0.02; this.life -= 1; }
-    draw() { ctx.fillStyle=this.color; ctx.fillRect(this.x,this.y,2,2); }
-  }
-  function explode(x,y) {
-    const colors = ["#ff4d6d","#ffd166","#06d6a0","#118ab2","#c77dff"];
-    for(let i=0;i<100;i++) {
-      let angle = Math.random()*2*Math.PI;
-      let speed = random(1,4);
-      particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)],Math.cos(angle)*speed,Math.sin(angle)*speed,100));
-    }
-  }
-  canvas.addEventListener('click',(e)=>explode(e.clientX,e.clientY));
-  setInterval(()=>explode(random(0,canvas.width), random(0,canvas.height/2)), 2000);
-  function animate() {
-    ctx.fillStyle="rgba(11,18,32,0.2)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    particles.forEach((p,i)=>{ p.update(); p.draw(); if(p.life<=0) particles.splice(i,1); });
-    requestAnimationFrame(animate);
-  }
-  animate();
+  // Fireworks
+  const canvas=document.getElementById('fireworks');const ctx=canvas.getContext('2d');let particles=[];
+  function resize(){canvas.width=innerWidth;canvas.height=innerHeight}addEventListener('resize',resize);resize();
+  function random(min,max){return Math.random()*(max-min)+min}
+  class Particle{constructor(x,y,color,velX,velY,life){this.x=x;this.y=y;this.color=color;this.velX=velX;this.velY=velY;this.life=life}update(){this.x+=this.velX;this.y+=this.velY;this.velY+=.02;this.life-=1}draw(){ctx.fillStyle=this.color;ctx.fillRect(this.x,this.y,2,2)}}
+  function explode(x,y){const colors=["#ff4d6d","#ffd166","#06d6a0","#118ab2","#c77dff"];for(let i=0;i<100;i++){let ang=Math.random()*2*Math.PI;let sp=random(1,4);particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)],Math.cos(ang)*sp,Math.sin(ang)*sp,100))}}
+  canvas.addEventListener('click',e=>explode(e.clientX,e.clientY));
+  setInterval(()=>explode(random(0,canvas.width),random(0,canvas.height/2)),2000);
+  function animate(){ctx.fillStyle="rgba(11,18,32,.2)";ctx.fillRect(0,0,canvas.width,canvas.height);particles.forEach((p,i)=>{p.update();p.draw();if(p.life<=0)particles.splice(i,1)});requestAnimationFrame(animate)}animate();
 </script>
 </body>
 </html>
